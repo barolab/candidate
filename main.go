@@ -2,55 +2,18 @@ package main
 
 import (
 	"fmt"
-	"regexp"
-	"unicode/utf8"
+
+	"github.com/barolab/candidate/social"
 )
-
-var (
-	illegalPatternRegexp = regexp.MustCompile("(?i)twitter")
-	legalRunesRegexp     = regexp.MustCompile("^[0-9A-Za-z_]+$")
-)
-
-func isShortEnough(username string) bool {
-	return utf8.RuneCountInString(username) < 15
-}
-
-func isLongEnough(username string) bool {
-	return utf8.RuneCountInString(username) > 1
-}
-
-func containsNoIllegalPattern(username string) bool {
-	return illegalPatternRegexp.MatchString(username)
-}
-
-func onlyContainsLegalRunes(username string) bool {
-	return legalRunesRegexp.MatchString(username)
-}
 
 func main() {
-	names := []string{
-		"JeanMichelSuperRelou",
-		"",
-		"tWItter",
-		"Bad-Candidate",
-		"Candidate",
+	providers := []social.Network{
+		social.NewTwitter("twitter.com", "this-is-not-so-secret", "changeme"),
 	}
 
-	for _, name := range names {
-		if !isShortEnough(name) {
-			fmt.Printf("Username \"%s\" is too long\n", name)
-		}
-
-		if !isLongEnough(name) {
-			fmt.Printf("Username \"%s\" is too short\n", name)
-		}
-
-		if containsNoIllegalPattern(name) {
-			fmt.Printf("Username \"%s\" contains illegal pattern\n", name)
-		}
-
-		if !onlyContainsLegalRunes(name) {
-			fmt.Printf("Username \"%s\" contains illegal characters\n", name)
+	for _, provider := range providers {
+		if err := provider.Validate("JeanMichelSuperRel0u"); err != nil {
+			fmt.Printf("Failed to validate username on %s, got %s\n", provider.Name(), err)
 		}
 	}
 }
