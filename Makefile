@@ -24,7 +24,7 @@ GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD 2>/dev/null)
 GIT_BRANCH_CLEAN := $(shell echo $(GIT_BRANCH) | sed -e "s/[^[:alnum:]]/-/g")
 BUILDTIME := $(shell date '+%d-%m-%Y-%Z-%T')
 
-.PHONY: fmt fmt-check vet lint misspell misspell-check test test-coverage cover install hooks help
+.PHONY: fmt fmt-check vet test test-coverage cover install hooks help
 default: help
 
 ## Build the docker image
@@ -49,30 +49,9 @@ fmt-check:
 		exit 1; \
 	fi;
 
-## Check common errors in source code
+## Check source code for common errors
 vet:
-	$(GO) vet $(PACKAGES)
-
-## Lint source code
-lint:
-	@hash golint > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
-		$(GO) get -u github.com/golang/lint/golint; \
-	fi
-	for PKG in $(PACKAGES); do golint -set_exit_status $$PKG || exit 1; done;
-
-## Try to fix any misspell words
-misspell:
-	@hash misspell > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
-		$(GO) get -u github.com/client9/misspell/cmd/misspell; \
-	fi
-	misspell -w -i unknwon $(GOFILES)
-
-## Check for misspell words
-misspell-check:
-	@hash misspell > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
-		$(GO) get -u github.com/client9/misspell/cmd/misspell; \
-	fi
-	misspell -error -i unknwon $(GOFILES)
+	$(GO) vet ${PACKAGES}
 
 ## Execute unit tests
 test:

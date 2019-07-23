@@ -9,8 +9,8 @@ steps:
   - name: test
     image: golang:1.12
     commands:
-      - go mod download
-      - make test-coverage
+      - make install
+      - make test
     when:
       event: [ push, pull_request ]
       branch: [ master ]
@@ -18,11 +18,9 @@ steps:
   - name: build
     image: golang:1.12
     commands:
-      - go mod download
+      - make install
       - make vet
-      - make lint
       - make fmt-check
-      - make misspell-check
       - go build
     when:
       event: [ push, tag, pull_request ]
