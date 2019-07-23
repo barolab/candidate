@@ -1,0 +1,20 @@
+kind: pipeline
+name: default
+
+workspace:
+  base: /go
+  path: src/github.com/barolab/candidate
+
+steps:
+  - name: test
+    image: golang:alpine
+    commands:
+      - go mod download
+      - go test
+
+  - name: build
+    image: golang:alpine
+    commands:
+      - go mod download
+      - go build -o candidate
+      - chmod +x candidate
