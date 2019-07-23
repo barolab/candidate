@@ -35,39 +35,33 @@ panic() {
 
 NAME=$(git branch | sed 's/* //')
 if [ "$NAME" != '(no branch)' ]; then
+  title "Mispell"
+  {
+    make misspell
+  } || {
+    error "Mispell failed"
+  }
+
   title "Format"
-  for file in $(git diff --diff-filter=d --cached --name-only | grep -E '\.js$'); do
-    {
-      prettier "${file}" && git add "${file}" && success "${file}"
-    } || {
-      error "${file}"
-    }
-  done
-  for file in $(git diff --diff-filter=d --cached --name-only | grep -E '\.go$'); do
-    {
-      gofmt -w "${file}" && git add "${file}" && success "${file}"
-    } || {
-      error "${file}"
-    }
-  done
-  echo
+  {
+    make fmt
+  } || {
+    error "Format failed"
+  }
+
+  title "Vet"
+  {
+    make vet
+  } || {
+    error "Vet failed"
+  }
 
   title "Lint"
-  for file in $(git diff --diff-filter=d --cached --name-only | grep -E '\.js$'); do
-    {
-      eslint "${file}" && success "$file"
-    } || {
-      error "$file"
-    }
-  done
-  for file in $(git diff --diff-filter=d --cached --name-only | grep -E '\.go$'); do
-    {
-      go vet -all "${file}" && success "$file"
-    } || {
-      error "$file"
-    }
-  done
-  echo
+  {
+    make lint
+  } || {
+    error "Lint failed"
+  }
 
   echo
   echo "Hook ${bold}${green}succeeded${normal}, proceeding to commit."

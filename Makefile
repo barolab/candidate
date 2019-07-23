@@ -12,6 +12,11 @@ BIN := candidate
 ORG := barolab
 PKG := github.com/${ORG}/${BIN}
 
+GO ?= go
+GOFMT ?= gofmt -s
+GOFILES := $(shell find . -name "*.go" -type f)
+PACKAGES ?= $(shell $(GO) list ./...)
+
 # This version-strategy uses git tags to set the version string
 GIT_TAG := $(shell git describe --tags --always --dirty || echo unsupported)
 GIT_COMMIT := $(shell git rev-parse --short HEAD || echo unsupported)
@@ -19,7 +24,7 @@ GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD 2>/dev/null)
 GIT_BRANCH_CLEAN := $(shell echo $(GIT_BRANCH) | sed -e "s/[^[:alnum:]]/-/g")
 BUILDTIME := $(shell date '+%d-%m-%Y-%Z-%T')
 
-.PHONY: fmt test cover lint install hooks help
+.PHONY: fmt fmt-check vet lint misspell misspell-check test test-coverage cover install hooks help
 default: help
 
 ## Build the docker image
@@ -33,20 +38,57 @@ build:
 
 ## Format go source code
 fmt:
-	@go fmt ./...
+	$(GOFMT) -w $(GOFILES)
+
+## Check if source code is formatted correctly
+fmt-check:
+	@diff=$$($(GOFMT) -d $(GOFILES)); \
+	if [ -n "$$diff" ]; then \
+		echo "Please run 'make fmt' and commit the result:"; \
+		echo "$${diff}"; \
+		exit 1; \
+	fi;
+
+## Check common errors in source code
+vet:
+	$(GO) vet $(PACKAGES)
+
+## Lint source code
+lint:
+	@hash golint > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
+		$(GO) get -u github.com/golang/lint/golint; \
+	fi
+	for PKG in $(PACKAGES); do golint -set_exit_status $$PKG || exit 1; done;
+
+## Try to fix any misspell words
+misspell:
+	@hash misspell > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
+		$(GO) get -u github.com/client9/misspell/cmd/misspell; \
+	fi
+	misspell -w -i unknwon $(GOFILES)
+
+## Check for misspell words
+misspell-check:
+	@hash misspell > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
+		$(GO) get -u github.com/client9/misspell/cmd/misspell; \
+	fi
+	misspell -error -i unknwon $(GOFILES)
 
 ## Execute unit tests
 test:
-	@go test ./...
+	$(GO) test ${PACKAGES}
+
+## Execute unit tests & compute coverage
+test-coverage:
+	$(GO) test -coverprofile=coverage.out ${PACKAGES}
 
 ## Compute coverage
-cover:
-	@go test -coverprofile=coverage.out ./...
-	@go tool cover -html=coverage.out
+cover: test-coverage
+	$(GO) tool cover -html=coverage.out
 
 ## Install dependencies used for development
 install: hooks
-	@go mod vendor
+	$(GO) mod download
 
 ## Install git hooks for post-checkout & pre-commit
 hooks:

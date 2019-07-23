@@ -7,14 +7,22 @@ workspace:
 
 steps:
   - name: test
-    image: golang:alpine
+    image: golang:1.12
     commands:
       - go mod download
-      - go test
+      - make test-coverage
+    when:
+      event: [ push, pull_request ]
+      branch: [ master ]
 
   - name: build
-    image: golang:alpine
+    image: golang:1.12
     commands:
       - go mod download
-      - go build -o candidate
-      - chmod +x candidate
+      - make vet
+      - make lint
+      - make fmt-check
+      - make misspell-check
+      - go build
+    when:
+      event: [ push, tag, pull_request ]
