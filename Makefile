@@ -19,7 +19,7 @@ GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD 2>/dev/null)
 GIT_BRANCH_CLEAN := $(shell echo $(GIT_BRANCH) | sed -e "s/[^[:alnum:]]/-/g")
 BUILDTIME := $(shell date '+%d-%m-%Y-%Z-%T')
 
-.PHONY: fmt lint install hooks help
+.PHONY: fmt test cover lint install hooks help
 default: help
 
 ## Build the docker image
@@ -34,6 +34,15 @@ build:
 ## Format go source code
 fmt:
 	@go fmt ./...
+
+## Execute unit tests
+test:
+	@go test ./...
+
+## Compute coverage
+cover:
+	@go test -coverprofile=coverage.out ./...
+	@go tool cover -html=coverage.out
 
 ## Install dependencies used for development
 install: hooks

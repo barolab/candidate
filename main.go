@@ -1,19 +1,56 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"regexp"
+	"unicode/utf8"
+)
 
-// VERSION is the app-global version string, which should be substituted with a real value during build.
-var VERSION = "UNKNOWN"
+var (
+	illegalPatternRegexp = regexp.MustCompile("(?i)twitter")
+	legalRunesRegexp     = regexp.MustCompile("^[0-9A-Za-z_]+$")
+)
 
-// GOVERSION is the Golang version used to generate the binary.
-var GOVERSION = "UNKNOWN"
+func isShortEnough(username string) bool {
+	return utf8.RuneCountInString(username) < 15
+}
 
-// BUILDTIME is the timestamp at which the binary was created.
-var BUILDTIME = "UNKNOWN"
+func isLongEnough(username string) bool {
+	return utf8.RuneCountInString(username) > 1
+}
 
-// COMMITHASH is the git commit hash that was used to generate the binary.
-var COMMITHASH = "UNKNOWN"
+func containsNoIllegalPattern(username string) bool {
+	return illegalPatternRegexp.MatchString(username)
+}
+
+func onlyContainsLegalRunes(username string) bool {
+	return legalRunesRegexp.MatchString(username)
+}
 
 func main() {
-	fmt.Printf("Samples version %s (commit %s built with go %s the %s)\n", VERSION, COMMITHASH, GOVERSION, BUILDTIME)
+	names := []string{
+		"JeanMichelSuperRelou",
+		"",
+		"tWItter",
+		"Bad-Candidate",
+		"Candidate",
+	}
+
+	for _, name := range names {
+		if !isShortEnough(name) {
+			fmt.Printf("Username \"%s\" is too long\n", name)
+		}
+
+		if !isLongEnough(name) {
+			fmt.Printf("Username \"%s\" is too short\n", name)
+		}
+
+		if containsNoIllegalPattern(name) {
+			fmt.Printf("Username \"%s\" contains illegal pattern\n", name)
+		}
+
+		if !onlyContainsLegalRunes(name) {
+			fmt.Printf("Username \"%s\" contains illegal characters\n", name)
+		}
+	}
 }
