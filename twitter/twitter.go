@@ -31,6 +31,21 @@ func (t *Twitter) Name() string {
 	return name
 }
 
+// URL to the twitter API
+func (t *Twitter) URL() string {
+	return t.url
+}
+
+// APIKey to contact twitter
+func (t *Twitter) APIKey() string {
+	return t.apiKey
+}
+
+// APISecret to contact twitter
+func (t *Twitter) APISecret() string {
+	return t.apiSecret
+}
+
 // DoesAlreadyExists check whenever the given username exist on twitter
 func (t *Twitter) DoesAlreadyExists(username string) (bool, error) {
 	return false, fmt.Errorf("Not implemented yet")
