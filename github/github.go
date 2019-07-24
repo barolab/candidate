@@ -4,7 +4,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/barolab/candidate"
-	_ "github.com/barolab/candidate/twitter"
+	"github.com/barolab/candidate/fetch"
 )
 
 const (
@@ -17,15 +17,24 @@ func init() {
 }
 
 // Github is the social network provider that checks for a username validity / availability
-type Github struct{}
+type Github struct {
+	client fetch.Fetcher
+}
 
 // New creates a new instance of a Github NameProvider
 func New() *Github {
-	return &Github{}
+	return &Github{
+		client: fetch.DefaultFetcher,
+	}
 }
 
 func (g *Github) String() string {
 	return "Github"
+}
+
+// WithFetcher can be set behavior of the Github HTTP request
+func (g *Github) WithFetcher(f fetch.Fetcher) {
+	g.client = f
 }
 
 // Validate the username using Github rules

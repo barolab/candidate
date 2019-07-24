@@ -5,6 +5,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/barolab/candidate"
+	"github.com/barolab/candidate/fetch"
 )
 
 const (
@@ -22,15 +23,24 @@ func init() {
 }
 
 // Twitter is the social network provider that checks for a username validity / availability
-type Twitter struct{}
+type Twitter struct {
+	client fetch.Fetcher
+}
 
 // New creates a new instance of a Twitter NameProvider
 func New() *Twitter {
-	return &Twitter{}
+	return &Twitter{
+		client: fetch.DefaultFetcher,
+	}
 }
 
 func (t *Twitter) String() string {
 	return "Twitter"
+}
+
+// WithFetcher can be set behavior of the Twitter HTTP request
+func (t *Twitter) WithFetcher(f fetch.Fetcher) {
+	t.client = f
 }
 
 // Validate the username using Twitter rules
