@@ -24,7 +24,7 @@ GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD 2>/dev/null)
 GIT_BRANCH_CLEAN := $(shell echo $(GIT_BRANCH) | sed -e "s/[^[:alnum:]]/-/g")
 BUILDTIME := $(shell date '+%d-%m-%Y-%Z-%T')
 
-.PHONY: docker fmt fmt-check vet test test-coverage cover install hooks help
+.PHONY: fmt fmt-check vet test test-coverage cover install hooks help
 default: help
 
 ## Format go source code
@@ -66,16 +66,6 @@ hooks:
 	@cp -f ./scripts/pre-commit .git/hooks
 	@chmod +x .git/hooks/post-checkout
 	@chmod +x .git/hooks/pre-commit
-
-## Build the docker image
-docker:
-	@docker build \
-		--build-arg COMMITHASH="${GIT_COMMIT}" \
-		--build-arg BUILDTIME="${BUILDTIME}" \
-		--build-arg VERSION="${GIT_TAG}" \
-		--build-arg PKG="${PKG}" \
-		--tag "${ORG}/${BIN}" \
-		.
 
 ## Print this help message
 help:
