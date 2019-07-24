@@ -11,6 +11,15 @@ title() {
   echo "${UNDERLINE}${BOLD}${1}${NORMAL}"
 }
 
+success() {
+  echo "${GREEN}✓${NORMAL} ${1}"
+}
+
+error() {
+  echo "${RED}✗${NORMAL} $1"
+  STATUS=1
+}
+
 panic() {
   printf "\n\n\t%s\n\n" "$1"
   exit 1
@@ -18,18 +27,21 @@ panic() {
 
 NAME=$(git branch | sed 's/* //')
 if [ "$NAME" != '(no branch)' ]; then
-  title "Format"
-  make fmt
-
-  title "Vet"
-  make vet
-
-  title "Test"
-  make test
-
-  echo
-  echo "Hook ${bold}${green}succeeded${normal}, proceeding to commit."
-  echo
+  {
+    make fmt-check >>/dev/null 2>&1 && success "Format"
+  } || {
+    error "Bad formatting, run make fmt"
+  }
+  {
+    make vet >>/dev/null 2>&1 && success "Vet"
+  } || {
+    error "Bad code detected, run make vet to check for errors"
+  }
+  {
+    make test >>/dev/null 2>&1 && success "Test"
+  } || {
+    error "Failed to run unit test, run make test to check for failures"
+  }
 fi
 
 if [ $STATUS -ne 0 ]; then
