@@ -6,9 +6,33 @@ Web API for checking if a name is available in multiple services.
 
 ## Getting Started
 
-## Hosting
+After getting the package using `go get github.com/barolab/candidate` you can get all supported social network like so :
 
-With Docker
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/barolab/candidate"
+	_ "github.com/barolab/candidate/github"
+	_ "github.com/barolab/candidate/reddit"
+	_ "github.com/barolab/candidate/twitter"
+)
+
+func main() {
+	providers := candidate.SocialNetworks()
+
+    for _, provider := range providers {
+        violations := provider.Validate("Candidate")
+        if !violations.isNil() {
+            fmt.Printf("Candidate is NOT valid on %s, got %s\n", provider, violations)
+        }
+    }
+
+    fmt.Println("Candidate is valid on all providers")
+}
+```
 
 ## Documentation
 

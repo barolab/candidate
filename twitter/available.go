@@ -35,7 +35,7 @@ func newNetworkError(u *url.URL, parent error) NetworkError {
 }
 
 func (e ParseError) Error() string {
-	return fmt.Sprintf("Failed to parse url %s, cannot check for username availability", e.url)
+	return fmt.Sprintf("Failed to parse url %s, %s", e.url, e.parent)
 }
 
 // Unwrap the parent error
@@ -44,7 +44,7 @@ func (e *ParseError) Unwrap() error {
 }
 
 func (e NetworkError) Error() string {
-	return fmt.Sprintf("Failed to contact url %s, cannot check for username availability", e.url)
+	return fmt.Sprintf("Failed to contact url %s, %s", e.url, e.parent)
 }
 
 // Unwrap the parent error
