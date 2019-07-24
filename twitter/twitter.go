@@ -33,7 +33,7 @@ func (t *Twitter) String() string {
 	return "Twitter"
 }
 
-// Validate the username using Tiwtter rules
+// Validate the username using Twitter rules
 func (t *Twitter) Validate(username string) (violations candidate.Violations) {
 	length := utf8.RuneCountInString(username)
 
