@@ -1,4 +1,4 @@
-package social
+package lib
 
 import "fmt"
 

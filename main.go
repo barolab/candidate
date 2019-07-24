@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/barolab/candidate/social"
+	"github.com/barolab/candidate/lib"
 	"github.com/barolab/candidate/twitter"
 	"github.com/barolab/candidate/version"
 )
@@ -18,7 +18,7 @@ func main() {
 		"Zoideberg",
 	}
 
-	providers := []social.Network{
+	providers := []lib.SocialNetwork{
 		twitter.NewTwitter("twitter.com", "this-is-not-so-secret", "changeme"),
 	}
 
@@ -27,7 +27,7 @@ func main() {
 	}
 }
 
-func validate(name string, providers []social.Network) {
+func validate(name string, providers []lib.SocialNetwork) {
 	for _, provider := range providers {
 		if violations := provider.Validate(name); !violations.IsNil() {
 			fmt.Printf("Failed to validate \"%s\" on %s:\n%s\n", name, provider.Name(), violations)

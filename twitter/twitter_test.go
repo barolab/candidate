@@ -3,7 +3,7 @@ package twitter_test
 import (
 	"testing"
 
-	"github.com/barolab/candidate/social"
+	"github.com/barolab/candidate/lib"
 	"github.com/barolab/candidate/twitter"
 )
 
@@ -11,21 +11,21 @@ var client = twitter.NewTwitter("test", "test", "test")
 
 type ValidateTestCase struct {
 	name       string
-	violations social.Violations
+	violations lib.Violations
 }
 
 func TestValidate(T *testing.T) {
 	cases := []ValidateTestCase{
-		{name: "", violations: social.Violations{social.NameTooShort}},
-		{name: "this-string-has-too-much-runes", violations: social.Violations{social.NameTooLong, social.NameContainsIllegalCharacters}},
-		{name: "TWITTER", violations: social.Violations{social.NameContainsIllegalPattern}},
-		{name: "Twitter", violations: social.Violations{social.NameContainsIllegalPattern}},
-		{name: "twitter", violations: social.Violations{social.NameContainsIllegalPattern}},
-		{name: "twittEr", violations: social.Violations{social.NameContainsIllegalPattern}},
-		{name: "TWITTTT", violations: social.Violations{}},
-		{name: "This_is_Valid", violations: social.Violations{}},
-		{name: "-illegal-rune", violations: social.Violations{social.NameContainsIllegalCharacters}},
-		{name: "000__000", violations: social.Violations{}},
+		{name: "", violations: lib.Violations{lib.NameTooShort}},
+		{name: "this-string-has-too-much-runes", violations: lib.Violations{lib.NameTooLong, lib.NameContainsIllegalCharacters}},
+		{name: "TWITTER", violations: lib.Violations{lib.NameContainsIllegalPattern}},
+		{name: "Twitter", violations: lib.Violations{lib.NameContainsIllegalPattern}},
+		{name: "twitter", violations: lib.Violations{lib.NameContainsIllegalPattern}},
+		{name: "twittEr", violations: lib.Violations{lib.NameContainsIllegalPattern}},
+		{name: "TWITTTT", violations: lib.Violations{}},
+		{name: "This_is_Valid", violations: lib.Violations{}},
+		{name: "-illegal-rune", violations: lib.Violations{lib.NameContainsIllegalCharacters}},
+		{name: "000__000", violations: lib.Violations{}},
 	}
 
 	for _, c := range cases {

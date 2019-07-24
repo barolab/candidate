@@ -1,8 +1,8 @@
-package social
+package lib
 
-// Network is an interface for any given social network that should check whenever a username
+// SocialNetwork is an interface for any given social network that should check whenever a username
 // match the requirements & does not already exists
-type Network interface {
+type SocialNetwork interface {
 
 	// Name of the social network
 	Name() string
