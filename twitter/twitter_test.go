@@ -1,13 +1,13 @@
-package social_test
+package twitter_test
 
 import (
 	"fmt"
 	"testing"
 
-	"github.com/barolab/candidate/social"
+	"github.com/barolab/candidate/twitter"
 )
 
-var twitter = social.NewTwitter("test", "test", "test")
+var client = twitter.NewTwitter("test", "test", "test")
 
 type assert struct {
 	arg      string
@@ -29,7 +29,7 @@ func TestValidate(T *testing.T) {
 	}
 
 	for _, assertion := range assertions {
-		err := twitter.Validate(assertion.arg)
+		err := client.Validate(assertion.arg)
 		if assertion.expected == nil && err != nil {
 			T.Errorf("Failed to validate %s, expected no errors, got %s", assertion.arg, err)
 		} else if assertion.expected != nil && err == nil {
