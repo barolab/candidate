@@ -8,7 +8,7 @@ type Network interface {
 	Name() string
 
 	// Valide if the given string respect the SocialNetwork restrictions
-	Validate(username string) error
+	Validate(username string) Violations
 
 	// DoesAlreadyExists fetch the given username from the social network, return false if it exist, true otherwise
 	DoesAlreadyExists(username string) (bool, error)

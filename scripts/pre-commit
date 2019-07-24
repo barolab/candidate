@@ -11,23 +11,6 @@ title() {
   echo "${UNDERLINE}${BOLD}${1}${NORMAL}"
 }
 
-success() {
-  echo "${GREEN}✓${NORMAL} ${1}"
-}
-
-error() {
-  echo "${RED}✗${NORMAL} $1"
-  STATUS=1
-}
-
-prettier() {
-  ./node_modules/prettier/bin-prettier.js --write --loglevel silent "${1}"
-}
-
-eslint() {
-  ./node_modules/eslint/bin/eslint.js "${1}"
-}
-
 panic() {
   printf "\n\n\t%s\n\n" "$1"
   exit 1
@@ -36,24 +19,13 @@ panic() {
 NAME=$(git branch | sed 's/* //')
 if [ "$NAME" != '(no branch)' ]; then
   title "Format"
-  for file in $(git diff --diff-filter=d --cached --name-only | grep -E '\.go$'); do
-    {
-      gofmt -w "${file}" && git add "${file}" && success "${file}"
-    } || {
-      error "${file}"
-    }
-  done
-  echo
+  make fmt
 
   title "Vet"
-  for file in $(git diff --diff-filter=d --cached --name-only | grep -E '\.go$'); do
-    {
-      go vet -all "${file}" && success "$file"
-    } || {
-      error "$file"
-    }
-  done
-  echo
+  make vet
+
+  title "Test"
+  make test
 
   echo
   echo "Hook ${bold}${green}succeeded${normal}, proceeding to commit."
