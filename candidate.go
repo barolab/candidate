@@ -5,10 +5,18 @@ var providers []NameProvider
 // NameProvider represents a service providing names, it then should be able to checks for existence of a given name
 type NameProvider interface {
 	String() string
+	IsAvailabler
+	Validator
+}
 
+// Validator interface for remote system that have special rules about user names
+type Validator interface {
 	// Validate if the given string respect the SocialNetwork restrictions
 	Validate(name string) Violations
+}
 
+// IsAvailabler interface for remote system that can check for a username availability
+type IsAvailabler interface {
 	// IsAvailable check if the given name exists in the provider
 	IsAvailable(name string) (bool, error)
 }
