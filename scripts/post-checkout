@@ -17,7 +17,5 @@ check() {
 }
 
 # Search for pakage files and check if they changed, for node related files use yarn, for go use make
-for f in $(find . -not -path "*node_modules*" -name 'package.json'); do check $f "yarn"; done
-for f in $(find . -not -path "*node_modules*" -name 'yarn.lock'); do check $f "yarn"; done
 for f in $(find . -not -path "*node_modules*" -name 'go.mod'); do check $f "make"; done
 for f in $(find . -not -path "*node_modules*" -name 'go.sum'); do check $f "make"; done
