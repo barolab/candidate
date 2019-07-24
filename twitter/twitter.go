@@ -17,22 +17,16 @@ var (
 	legalRunesRegexp     = regexp.MustCompile("^[0-9A-Za-z_]*$")
 )
 
-// Twitter is the social network provider that checks for a username validity / availability
-type Twitter struct {
-	url       string
-	apiKey    string
-	apiSecret string
+func init() {
+	candidate.Register(New())
 }
 
-// NewTwitter creates a new instance of a Twitter Social Network Provider
-func NewTwitter(configurators ...configurator) *Twitter {
-	t := &Twitter{}
+// Twitter is the social network provider that checks for a username validity / availability
+type Twitter struct{}
 
-	for _, c := range configurators {
-		c(t)
-	}
-
-	return t
+// New creates a new instance of a Twitter NameProvider
+func New() *Twitter {
+	return &Twitter{}
 }
 
 func (t *Twitter) String() string {

@@ -13,12 +13,7 @@ type ValidationTestCase struct {
 }
 
 func TestValidate(T *testing.T) {
-	client := twitter.NewTwitter(
-		twitter.WithURL("test"),
-		twitter.WithAPIKey("test"),
-		twitter.WithSecretKey("test"),
-	)
-
+	client := twitter.New()
 	cases := []ValidationTestCase{
 		{username: "", violations: candidate.Violations{candidate.NameTooShort}},
 		{username: "this-string-has-too-much-runes", violations: candidate.Violations{candidate.NameTooLong, candidate.NameContainsIllegalCharacters}},

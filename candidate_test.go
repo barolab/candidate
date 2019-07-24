@@ -12,8 +12,8 @@ type ValidationTestCase struct {
 	violations candidate.Violations
 }
 
-func TestTwitter(T *testing.T) {
-	exec(twitter.NewTwitter(twitter.WithURL("FAKE")), []ValidationTestCase{
+func TestAllProviders(T *testing.T) {
+	exec(twitter.New(), []ValidationTestCase{
 		{username: "", violations: candidate.Violations{candidate.NameTooShort}},
 		{username: "This_is_Valid", violations: candidate.Violations{}},
 		{username: "TWITTER", violations: candidate.Violations{candidate.NameContainsIllegalPattern}},
