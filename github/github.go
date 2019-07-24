@@ -4,6 +4,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/barolab/candidate"
+	_ "github.com/barolab/candidate/twitter"
 )
 
 const (
@@ -11,9 +12,9 @@ const (
 	maxLength = 15
 )
 
-// func init() {
-// 	candidate.Register(New())
-// }
+func init() {
+	candidate.Register(New())
+}
 
 // Github is the social network provider that checks for a username validity / availability
 type Github struct{}

@@ -1,6 +1,6 @@
 package candidate
 
-var providers = make([]NameProvider, 1)
+var providers []NameProvider
 
 // NameProvider represents a service providing names, it then should be able to checks for existence of a given name
 type NameProvider interface {
@@ -28,5 +28,5 @@ func SocialNetworks() []NameProvider {
 
 // Register a NameProvider in this package
 func Register(np NameProvider) {
-	providers[0] = np
+	providers = append(providers, np)
 }

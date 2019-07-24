@@ -31,6 +31,8 @@ func TestAllProviders(T *testing.T) {
 	providers := candidate.SocialNetworks()
 	sp := supported{
 		"Twitter",
+		"Github",
+		"Reddit",
 	}
 
 	for _, p := range providers {
