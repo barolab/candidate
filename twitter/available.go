@@ -65,5 +65,5 @@ func (t *Twitter) IsAvailable(name string) (bool, error) {
 	}
 
 	defer res.Body.Close()
-	return res.StatusCode == http.StatusOK, nil
+	return res.StatusCode == http.StatusNotFound, nil
 }
