@@ -7,7 +7,11 @@ import (
 	"github.com/barolab/candidate/twitter"
 )
 
-var client = twitter.NewTwitter("test", "test", "test")
+var client = twitter.NewTwitter(
+	twitter.WithURL("test"),
+	twitter.WithAPIKey("test"),
+	twitter.WithSecretKey("test"),
+)
 
 type ValidateTestCase struct {
 	name       string

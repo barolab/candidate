@@ -19,7 +19,7 @@ func main() {
 	}
 
 	providers := []lib.SocialNetwork{
-		twitter.NewTwitter("twitter.com", "this-is-not-so-secret", "changeme"),
+		twitter.NewTwitter(twitter.WithURL("twitter.com")),
 	}
 
 	for _, name := range names {
