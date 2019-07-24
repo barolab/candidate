@@ -1,11 +1,20 @@
 package twitter
 
 import (
-	"fmt"
+	"regexp"
+	"unicode/utf8"
+
+	"github.com/barolab/candidate"
 )
 
 const (
-	name = "Twitter"
+	minLength = 1
+	maxLength = 15
+)
+
+var (
+	illegalPatternRegexp = regexp.MustCompile("(?i)twitter")
+	legalRunesRegexp     = regexp.MustCompile("^[0-9A-Za-z_]*$")
 )
 
 // Twitter is the social network provider that checks for a username validity / availability
@@ -26,27 +35,29 @@ func NewTwitter(configurators ...configurator) *Twitter {
 	return t
 }
 
-// Name of the twitter social network provider
-func (t *Twitter) Name() string {
-	return name
+func (t *Twitter) String() string {
+	return "Twitter"
 }
 
-// URL to the twitter API
-func (t *Twitter) URL() string {
-	return t.url
-}
+// Validate the username using Tiwtter rules
+func (t *Twitter) Validate(username string) (violations candidate.Violations) {
+	length := utf8.RuneCountInString(username)
 
-// APIKey to contact twitter
-func (t *Twitter) APIKey() string {
-	return t.apiKey
-}
+	if length > maxLength {
+		violations = append(violations, candidate.NameTooLong)
+	}
 
-// APISecret to contact twitter
-func (t *Twitter) APISecret() string {
-	return t.apiSecret
-}
+	if length < minLength {
+		violations = append(violations, candidate.NameTooShort)
+	}
 
-// DoesAlreadyExists check whenever the given username exist on twitter
-func (t *Twitter) DoesAlreadyExists(username string) (bool, error) {
-	return false, fmt.Errorf("Not implemented yet")
+	if illegalPatternRegexp.MatchString(username) {
+		violations = append(violations, candidate.NameContainsIllegalPattern)
+	}
+
+	if !legalRunesRegexp.MatchString(username) {
+		violations = append(violations, candidate.NameContainsIllegalCharacters)
+	}
+
+	return violations
 }

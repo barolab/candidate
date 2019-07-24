@@ -1,4 +1,4 @@
-package lib
+package candidate
 
 import "fmt"
 
@@ -7,6 +7,13 @@ type Violation int
 
 // Violations is a slice of violation
 type Violations []Violation
+
+// NameProvider represents a service providing names, it then should be able to checks for existence of a given name
+type NameProvider interface {
+
+	// Valide if the given string respect the SocialNetwork restrictions
+	Validate(name string) Violations
+}
 
 const (
 	// NameTooLong is the violation message for a name which does respect the max length requirement
@@ -20,21 +27,28 @@ const (
 
 	// NameContainsIllegalCharacters is the violation message for a name containing bad characters
 	NameContainsIllegalCharacters
+
+	// NameAlreadyExist is the violation message for a name that already exist on a name provider
+	NameAlreadyExist
 )
 
 func (v Violation) String() string {
 	switch v {
 	case NameTooLong:
-		return "Name is too long"
+		return "NAME_TOO_LONG"
 	case NameTooShort:
-		return "Name is too short"
+		return "NAME_TOO_SHORT"
 	case NameContainsIllegalPattern:
-		return "Name contains an illegal pattern"
+		return "NAME_CONTAINS_ILLEGAL_PATTERNS"
 	case NameContainsIllegalCharacters:
-		return "Name containes illegal charater(s)"
+		return "NAME_CONTAINS_ILLEGAL_CHARACTERS"
 	default:
 		return ""
 	}
+}
+
+func (v Violation) Error() string {
+	return v.String()
 }
 
 func (violations Violations) String() string {
