@@ -34,6 +34,13 @@ func main() {
 }
 ```
 
+## Coming next
+
+Currently Reddit & Github integration are really small, we lack more rules here's what to do :
+
+- check https://www.reddit.com/user/{username} (set UserAgent)
+- check https://www.github.com/user/{username}
+
 ## Documentation
 
 - [Changelog](/doc/CHANGELOG)
