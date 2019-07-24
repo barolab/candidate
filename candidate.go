@@ -4,6 +4,7 @@ var providers []NameProvider
 
 // NameProvider represents a service providing names, it then should be able to checks for existence of a given name
 type NameProvider interface {
+	String() string
 
 	// Validate if the given string respect the SocialNetwork restrictions
 	Validate(name string) Violations
