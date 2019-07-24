@@ -4,9 +4,12 @@ import (
 	"fmt"
 
 	"github.com/barolab/candidate/social"
+	"github.com/barolab/candidate/version"
 )
 
 func main() {
+	fmt.Printf("Starting Candidate with version %s\n", version.Version())
+
 	providers := []social.Network{
 		social.NewTwitter("twitter.com", "this-is-not-so-secret", "changeme"),
 	}
