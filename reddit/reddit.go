@@ -11,9 +11,9 @@ const (
 	maxLength = 15
 )
 
-func init() {
-	candidate.Register(New())
-}
+// func init() {
+// 	candidate.Register(New())
+// }
 
 // Redit is the social network provider that checks for a username validity / availability
 type Redit struct{}
