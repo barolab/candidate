@@ -1,8 +1,10 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/barolab/candidate"
 	_ "github.com/barolab/candidate/github"
@@ -10,20 +12,55 @@ import (
 	_ "github.com/barolab/candidate/twitter"
 )
 
+// main will parse flags and decide how to call validation process
 func main() {
-	if len(os.Args) < 2 {
-		fmt.Printf("You need to pass a username to validate (go run main.go candidate)")
+	var (
+		start     = time.Now()
+		name      = flag.String("name", "", "The name to check")
+		parrallel = flag.Bool("parrallel", false, "Enable parrallel processing of the providers")
+		providers = candidate.SocialNetworks()
+	)
+
+	flag.Parse()
+	if *name == "" {
+		fmt.Printf("You need to pass a username to validate (go run main.go -name=candidate)")
 		os.Exit(1)
 	}
 
-	name := os.Args[1]
-	providers := candidate.SocialNetworks()
+	if *parrallel == true {
+		async(*name, providers)
+	} else {
+		procedural(*name, providers)
+	}
 
-	for _, p := range providers {
-		fmt.Println(check(name, p))
+	elapsed := time.Since(start)
+	fmt.Printf("Done in: %v\n", elapsed)
+}
+
+// procedural processsing will check for all providers one at a time
+func procedural(name string, providers []candidate.NameProvider) {
+	for _, provider := range providers {
+		fmt.Println(check(name, provider))
 	}
 }
 
+// async processing will check for providers in parrallel
+func async(name string, providers []candidate.NameProvider) {
+	ch := make(chan string, len(providers))
+	defer close(ch)
+
+	for _, provider := range providers {
+		go func(p candidate.NameProvider) {
+			ch <- check(name, p)
+		}(provider)
+	}
+
+	for range providers {
+		fmt.Println(<-ch)
+	}
+}
+
+// check a name against the given provider, the return message can be an error, violations or success
 func check(name string, provider candidate.NameProvider) string {
 	violations := provider.Validate(name)
 	if !violations.IsNil() {

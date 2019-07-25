@@ -70,7 +70,7 @@ hooks:
 
 ## Run the example
 example:
-	@go run example/main.go ${NAME}
+	@go run example/main.go -name=${NAME} -parrallel
 
 ## Print this help message
 help:
