@@ -8,10 +8,9 @@ import (
 )
 
 var expectedAllViolationsString = fmt.Sprintf(
-	"- %s\n- %s\n- %s\n- %s\n- %s\n- \n",
+	"- %s\n- %s\n- %s\n- %s\n- \n",
 	"NAME_TOO_LONG",
 	"NAME_TOO_SHORT",
-	"NAME_ALREADY_EXIST",
 	"NAME_CONTAINS_ILLEGAL_PATTERNS",
 	"NAME_CONTAINS_ILLEGAL_CHARACTERS",
 )
@@ -20,7 +19,6 @@ func TestViolations(T *testing.T) {
 	violations := candidate.Violations{
 		candidate.NameTooLong,
 		candidate.NameTooShort,
-		candidate.NameAlreadyExist,
 		candidate.NameContainsIllegalPattern,
 		candidate.NameContainsIllegalCharacters,
 		11, // unkown violation

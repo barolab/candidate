@@ -20,9 +20,6 @@ const (
 
 	// NameContainsIllegalCharacters is the violation message for a name containing bad characters
 	NameContainsIllegalCharacters
-
-	// NameAlreadyExist is the violation message for a name that already exist on a name provider
-	NameAlreadyExist
 )
 
 func (v Violation) String() string {
@@ -31,8 +28,6 @@ func (v Violation) String() string {
 		return "NAME_TOO_LONG"
 	case NameTooShort:
 		return "NAME_TOO_SHORT"
-	case NameAlreadyExist:
-		return "NAME_ALREADY_EXIST"
 	case NameContainsIllegalPattern:
 		return "NAME_CONTAINS_ILLEGAL_PATTERNS"
 	case NameContainsIllegalCharacters:
