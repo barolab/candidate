@@ -3,6 +3,7 @@ package github
 import (
 	"fmt"
 	"net/url"
+	"regexp"
 	"unicode/utf8"
 
 	"github.com/barolab/candidate"
@@ -11,7 +12,14 @@ import (
 
 const (
 	minLength = 1
-	maxLength = 15
+	maxLength = 39
+)
+
+var (
+	legalRunesRegexp                 = regexp.MustCompile("^[0-9A-Za-z-]*$")
+	endsWithHyphenRegex              = regexp.MustCompile(".*-$")
+	startWithHyphenRegex             = regexp.MustCompile("^-")
+	hasTwoConsecutiveWithHyphenRegex = regexp.MustCompile(".*--.*")
 )
 
 func init() {
@@ -54,6 +62,22 @@ func (g *Github) Validate(username string) (violations candidate.Violations) {
 
 	if length < minLength {
 		violations = append(violations, candidate.NameTooShort)
+	}
+
+	if !legalRunesRegexp.MatchString(username) {
+		violations = append(violations, candidate.NameContainsIllegalCharacters)
+	}
+
+	if endsWithHyphenRegex.MatchString(username) {
+		violations = append(violations, candidate.NameContainsIllegalPattern)
+	}
+
+	if startWithHyphenRegex.MatchString(username) {
+		violations = append(violations, candidate.NameContainsIllegalPattern)
+	}
+
+	if hasTwoConsecutiveWithHyphenRegex.MatchString(username) {
+		violations = append(violations, candidate.NameContainsIllegalPattern)
 	}
 
 	return violations

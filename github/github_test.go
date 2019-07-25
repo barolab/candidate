@@ -40,8 +40,12 @@ func TestValidate(T *testing.T) {
 	client := github.New()
 	cases := []ValidationTestCase{
 		{username: "", violations: candidate.Violations{candidate.NameTooShort}},
-		{username: "this-string-has-too-much-runes", violations: candidate.Violations{candidate.NameTooLong}},
-		{username: "This_is_Valid", violations: candidate.Violations{}},
+		{username: "this-string-has-too-much-runes-runes-runes-runes-runes-runes", violations: candidate.Violations{candidate.NameTooLong}},
+		{username: "This-is-Valid", violations: candidate.Violations{}},
+		{username: "This_is_Valid", violations: candidate.Violations{candidate.NameContainsIllegalCharacters}},
+		{username: "-candidate", violations: candidate.Violations{candidate.NameContainsIllegalPattern}},
+		{username: "candidate-", violations: candidate.Violations{candidate.NameContainsIllegalPattern}},
+		{username: "cand--idate", violations: candidate.Violations{candidate.NameContainsIllegalPattern}},
 	}
 
 	for _, c := range cases {
