@@ -16,6 +16,7 @@ import (
 
 	"github.com/barolab/candidate"
 	_ "github.com/barolab/candidate/github"
+	_ "github.com/barolab/candidate/pinterest"
 	_ "github.com/barolab/candidate/reddit"
 	_ "github.com/barolab/candidate/twitter"
 )
@@ -33,13 +34,6 @@ func main() {
     fmt.Println("Candidate is valid on all providers")
 }
 ```
-
-## Coming next
-
-Currently Reddit & Github integration are really small, we lack more rules here's what to do :
-
-- check https://www.reddit.com/user/{username} (set UserAgent)
-- check https://www.github.com/user/{username}
 
 ## Documentation
 
