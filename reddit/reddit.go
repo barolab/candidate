@@ -3,6 +3,7 @@ package reddit
 import (
 	"fmt"
 	"net/url"
+	"regexp"
 	"unicode/utf8"
 
 	"github.com/barolab/candidate"
@@ -10,8 +11,12 @@ import (
 )
 
 const (
-	minLength = 1
-	maxLength = 15
+	minLength = 3
+	maxLength = 20
+)
+
+var (
+	legalRunesRegexp = regexp.MustCompile("^[0-9A-Za-z_]*$")
 )
 
 func init() {
@@ -54,6 +59,10 @@ func (r *Reddit) Validate(username string) (violations candidate.Violations) {
 
 	if length < minLength {
 		violations = append(violations, candidate.NameTooShort)
+	}
+
+	if !legalRunesRegexp.MatchString(username) {
+		violations = append(violations, candidate.NameContainsIllegalCharacters)
 	}
 
 	return violations

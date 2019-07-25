@@ -40,9 +40,9 @@ func TestValidate(T *testing.T) {
 	client := reddit.New()
 	cases := []ValidationTestCase{
 		{username: "", violations: candidate.Violations{candidate.NameTooShort}},
-		{username: "this-string-has-too-much-runes", violations: candidate.Violations{candidate.NameTooLong}},
+		{username: "this-string-has-too-much-runes", violations: candidate.Violations{candidate.NameTooLong, candidate.NameContainsIllegalCharacters}},
 		{username: "This_is_Valid", violations: candidate.Violations{}},
-		{username: "-illegal-rune", violations: candidate.Violations{}},
+		{username: "-illegal-rune", violations: candidate.Violations{candidate.NameContainsIllegalCharacters}},
 		{username: "000__000", violations: candidate.Violations{}},
 	}
 
