@@ -16,29 +16,29 @@ func init() {
 	candidate.Register(New())
 }
 
-// Redit is the social network provider that checks for a username validity / availability
-type Redit struct {
+// Reddit is the social network provider that checks for a username validity / availability
+type Reddit struct {
 	client fetch.Fetcher
 }
 
-// New creates a new instance of a Redit NameProvider
-func New() *Redit {
-	return &Redit{
+// New creates a new instance of a Reddit NameProvider
+func New() *Reddit {
+	return &Reddit{
 		client: fetch.DefaultFetcher,
 	}
 }
 
-func (r *Redit) String() string {
-	return "Redit"
+func (r *Reddit) String() string {
+	return "Reddit"
 }
 
 // WithFetcher can be set behavior of the Twitter HTTP request
-func (r *Redit) WithFetcher(f fetch.Fetcher) {
+func (r *Reddit) WithFetcher(f fetch.Fetcher) {
 	r.client = f
 }
 
 // Validate the username using Tiwtter rules
-func (r *Redit) Validate(username string) (violations candidate.Violations) {
+func (r *Reddit) Validate(username string) (violations candidate.Violations) {
 	length := utf8.RuneCountInString(username)
 
 	if length > maxLength {
