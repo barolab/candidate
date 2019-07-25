@@ -60,7 +60,7 @@ func TestIsAvailable(T *testing.T) {
 	cases := []IsAvailableTestCase{
 		{argument: "candidate", expected: false, err: nil, fetcher: OkFetcher},
 		{argument: "candidate", expected: true, err: nil, fetcher: NotFoundFetcher},
-		{argument: "candidate", expected: false, err: fmt.Errorf("Failed to contact Twitter at https://twitter.com/candidate with error Failed to contact remote server"), fetcher: ErrorFetcher},
+		{argument: "candidate", expected: false, err: fmt.Errorf("Failed to contact %s at https://twitter.com/candidate with error %s", client, ErrorFetcher.err), fetcher: ErrorFetcher},
 	}
 
 	for _, c := range cases {
