@@ -22,7 +22,7 @@ func (t *Twitter) IsAvailable(name string) (bool, error) {
 
 	res, err := t.client.Fetch(req)
 	if err != nil {
-		return false, fmt.Errorf("Failed to contact Twitter at %s with error %s", u, err)
+		return false, fmt.Errorf("Failed to contact %s at %s with error %s", t, u, err)
 	}
 
 	defer res.Body.Close()
