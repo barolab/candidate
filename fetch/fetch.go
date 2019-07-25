@@ -58,5 +58,9 @@ func IsNotFound(f Fetcher, u string) (result bool, err error) {
 		}
 	}()
 
+	if res.StatusCode >= 400 && res.StatusCode != http.StatusNotFound {
+		return false, fmt.Errorf("Request failed with code %d: %s", res.StatusCode, res.Body)
+	}
+
 	return res.StatusCode == http.StatusNotFound, nil
 }

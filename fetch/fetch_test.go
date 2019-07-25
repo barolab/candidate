@@ -40,6 +40,15 @@ var (
 		},
 	}
 
+	BadReqFetcher = &FakeFetcher{
+		err: nil,
+		res: &http.Response{
+			Status:     "400 Bad Request",
+			StatusCode: http.StatusBadRequest,
+			Body:       ioutil.NopCloser(bytes.NewBufferString("Testing")),
+		},
+	}
+
 	NotFoundFetcher = &FakeFetcher{
 		err: nil,
 		res: &http.Response{
@@ -59,6 +68,7 @@ func TestIsNotFound(T *testing.T) {
 	cases := []IsAvailableTestCase{
 		{argument: "https://provider.com/candidate", expected: false, err: nil, fetcher: OkFetcher},
 		{argument: "https://provider.com/candidate", expected: true, err: nil, fetcher: NotFoundFetcher},
+		{argument: "https://provider.com/candidate", expected: false, err: fmt.Errorf("Request failed with code 400: {Testing}"), fetcher: BadReqFetcher},
 		{argument: "https://provider.com/candidate", expected: false, err: fmt.Errorf("Request to https://provider.com/candidate failed: %s", ErrorFetcher.err), fetcher: ErrorFetcher},
 	}
 
