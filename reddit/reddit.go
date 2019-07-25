@@ -1,6 +1,8 @@
 package reddit
 
 import (
+	"fmt"
+	"net/url"
 	"unicode/utf8"
 
 	"github.com/barolab/candidate"
@@ -35,6 +37,11 @@ func (r *Reddit) String() string {
 // WithFetcher can be set behavior of the Twitter HTTP request
 func (r *Reddit) WithFetcher(f fetch.Fetcher) {
 	r.client = f
+}
+
+// IsAvailable check if the given name is available in Reddit
+func (r *Reddit) IsAvailable(name string) (bool, error) {
+	return fetch.IsNotFound(r.client, fmt.Sprintf("https://www.reddit.com/user/%s", url.QueryEscape(name)))
 }
 
 // Validate the username using Tiwtter rules

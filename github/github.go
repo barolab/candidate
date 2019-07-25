@@ -1,6 +1,8 @@
 package github
 
 import (
+	"fmt"
+	"net/url"
 	"unicode/utf8"
 
 	"github.com/barolab/candidate"
@@ -35,6 +37,11 @@ func (g *Github) String() string {
 // WithFetcher can be set behavior of the Github HTTP request
 func (g *Github) WithFetcher(f fetch.Fetcher) {
 	g.client = f
+}
+
+// IsAvailable check if the given name is available in Github
+func (g *Github) IsAvailable(name string) (bool, error) {
+	return fetch.IsNotFound(g.client, fmt.Sprintf("https://github.com/%s", url.QueryEscape(name)))
 }
 
 // Validate the username using Github rules

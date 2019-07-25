@@ -1,6 +1,8 @@
 package twitter
 
 import (
+	"fmt"
+	"net/url"
 	"regexp"
 	"unicode/utf8"
 
@@ -36,6 +38,11 @@ func New() *Twitter {
 
 func (t *Twitter) String() string {
 	return "Twitter"
+}
+
+// IsAvailable check if the given name is available in Twitter
+func (t *Twitter) IsAvailable(name string) (bool, error) {
+	return fetch.IsNotFound(t.client, fmt.Sprintf("https://twitter.com/%s", url.QueryEscape(name)))
 }
 
 // WithFetcher can be set behavior of the Twitter HTTP request
