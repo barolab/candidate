@@ -16,6 +16,7 @@ import (
 
 	"github.com/barolab/candidate"
 	_ "github.com/barolab/candidate/github"
+	_ "github.com/barolab/candidate/instagram"
 	_ "github.com/barolab/candidate/pinterest"
 	_ "github.com/barolab/candidate/reddit"
 	_ "github.com/barolab/candidate/twitter"
