@@ -16,6 +16,7 @@ GO ?= go
 GOFMT ?= gofmt -s
 GOFILES := $(shell find . -name "*.go" -type f)
 PACKAGES ?= $(shell $(GO) list ./...)
+NAME ?= candidate
 
 # This version-strategy uses git tags to set the version string
 GIT_TAG := $(shell git describe --tags --always --dirty || echo unsupported)
@@ -24,7 +25,7 @@ GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD 2>/dev/null)
 GIT_BRANCH_CLEAN := $(shell echo $(GIT_BRANCH) | sed -e "s/[^[:alnum:]]/-/g")
 BUILDTIME := $(shell date '+%d-%m-%Y-%Z-%T')
 
-.PHONY: fmt fmt-check vet test test-coverage cover install hooks help
+.PHONY: fmt fmt-check vet test test-coverage cover install hooks example help
 default: help
 
 ## Format go source code
@@ -66,6 +67,10 @@ hooks:
 	@cp -f ./scripts/pre-commit .git/hooks
 	@chmod +x .git/hooks/post-checkout
 	@chmod +x .git/hooks/pre-commit
+
+## Run the example
+example:
+	@go run example/main.go ${NAME}
 
 ## Print this help message
 help:
